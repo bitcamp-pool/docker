@@ -1,0 +1,109 @@
+학습목표 : 도커 컨테이너 설치하기
+
+1. 뭘 준비해야 하지?
+    - 컴퓨터와 도커 프로그램(WIN+R, dxdiag) : 2CORE, 2G 이상
+    - 도커 설치(도커엔진 플랫폼)
+    - 도커 서비스 실행(컨테이너 생성)
+
+2. 도커 설치 실습
+
+    1) VirtualBox(hypervisor프로그램)설치 - 네트워크 구성 - VM(가상머신)만들기 ***************************
+    
+    - 버추얼박스 다운로드 후 설치(https://www.virtualbox.org)
+    - Network 구성
+        NAT 네트워크 추가 : 파일-환경설정-네트워크-추가
+        네트워트 이름 : localNetwork
+        네트워크 CIDR : 10.100.0.0/24
+        DHCP 지원
+        포트포워딩
+            이름    프로토콜    호스트IP    호스트포트  게스트IP    게스트포트
+            docker1     TCP     127.0.0.1       105     10.100.0.105    22
+            docker2     TCP     127.0.0.1       106     10.100.0.105    22     
+    - 가상머신 만들기
+        이름:docker-ubuntu
+            CPU(2CORE), Memory(2GB), network(localNetwork), disk(20GB)
+        이름:docker-centos
+            CPU(2CORE), Memory(2GB), network(localNetwork), disk(20GB)    
+        각 가상머신 아이콘>마우스오른버튼>설정>시스템>플로피X>프로세서탭>CPU2개
+        >네트워크 메뉴>NAT네트워크>확인
+     
+    
+    2) VM에 Ubuntu 설치하고 기본환경 구성하기 ************************************************************
+      
+    - Ubuntu20.04 다운로드 후 설치 : https://ubuntu.com/
+    - 설치윈도우 종료>타이틀 메뉴바 오른쪽>Settings>Displays>
+      저장소메뉴>컨트롤러 비어있음>광학드라이브>CD아이콘>디스크파일선택>iso파일>확인
+    - 시작버튼 클릭  
+    - 가상머신>설정>시스템>마더보드>기본메모리>2048->4096MB>Resolution>1280x800(16:10)>Apply
+        언어선택(한국어)>설치>키보드>일반설치>새로만든 디스크 지우고 설치>
+        지금설치>포맷>계속설치>타임존 설정>관리자계정생성:guru/work-설치진행20분
+        설치완료되면 리부팅 진행
+    
+    - 설치 후 환경구성 
+        GUI 로그인:guru/work
+        해상도 조정: 1280x960(4:3)
+        서버구성:네크워크 설정(유선)
+            IPv4 : 수동 체크
+            IP address: 10.100.0.105/24, GW:10.100.0.1, DNS:10.100.0.1
+            적용 후 스위치 off->on 확인
+            
+            바탕화면 오른>Open in Terminal
+            $ ip addr
+            $ hostname
+            $ sudo vi /etc/hostname
+            hostname변경: docker-ubuntu.example.com
+            $ sudo vi /etc/hosts 
+            파일에 호스트 정보 추가(ip수정): 127.0.0.1 -> 10.100.0.105
+            
+            카운트3 구글DNS로 ping 테스트
+            $ ping -c 3 8.8.8.8
+
+        계정설정
+            $ sudo passwd root
+            root password설정: password
+
+            $ su -root
+            계정스위칭
+
+        Text 부팅으로 수정(GUI모드의 리소스 해제)
+            # systemctl set-default multi-user.target
+            $ sudo systemctl isolate graphical.target (윈도우 UI 전환)
+
+        SSH 서버 설치 후 운영
+            # apt-get update
+            레파지토리 업데이트
+            # apt-get install -y openssh-server curl vim tree
+            # systemctl status sshd
+            # ssh guru@localhost
+
+        Xshell로 로그인 구성
+
+    - 가상머신>설정>4096->2048MB 설정
+    - 가상머신>스냅샷>찍기  
+
+
+    3) VM에 Centos 설치하고 기본환경 구성하기 ************************************************************
+    
+    - CentOS 다운로드 후 설치
+        https://centos.org/
+    
+    - 설치 후 환경구성
+        관리자 계정:guru/work
+        root password : password
+        해상도 조절
+        네트워크 구성:10.100.0.106/24, GW:10.100.0.1, DNS:10.100.0.1
+            hostname:docker-centos.example.com
+            /etc/hosts 구성
+        text-login 구성
+        sshd 서비스 동작상태 확인
+        Xshell로 로그인 가능 여부 확인
+
+    4) Ubuntu/Centos 서버에 Docker 설치하기
+
+
+
+
+
+    
+    5) Windows 10에 DockerDesktop 설치하기
+
