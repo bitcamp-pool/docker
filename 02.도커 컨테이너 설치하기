@@ -86,6 +86,7 @@
     
     - CentOS 다운로드 후 설치
         https://centos.org/
+        방향키 Install CentOS 7 선택
     
     - 설치 후 환경구성
         관리자 계정:guru/work
@@ -98,12 +99,16 @@
         sshd 서비스 동작상태 확인
         Xshell로 로그인 가능 여부 확인
 
+
+
+
+
     4) Ubuntu/Centos 서버에 Docker 설치하기
 
 
 
 
 
-    
+
     5) Windows 10에 DockerDesktop 설치하기
 
